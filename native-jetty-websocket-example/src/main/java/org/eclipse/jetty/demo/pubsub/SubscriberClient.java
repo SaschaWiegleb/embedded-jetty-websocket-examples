@@ -14,10 +14,5 @@ public class SubscriberClient {
         SubscriberSocket subscriberSocket = new SubscriberSocket();
         Future<Session> sessionFuture = webSocketClient.connect(subscriberSocket, uri);
         Session webSocketSession = sessionFuture.get();
-
-        while (webSocketSession.isOpen()) {
-            Thread.sleep(10000);
-        }
-        System.out.println("Session is closed, exiting.");
     }
 }
