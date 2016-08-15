@@ -4,27 +4,37 @@ import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.WebSocketAdapter;
 
 public class SubscriberSocket extends WebSocketAdapter {
+    private String url;
+
+    public SubscriberSocket(String url) {
+        this.url = url;
+    }
+
     @Override
     public void onWebSocketClose(int statusCode, String reason) {
-        System.out.println("Received close: status: " + statusCode + ", reason: " + reason);
+        printMessage("Received close: status: " + statusCode + ", reason: " + reason);
         super.onWebSocketClose(statusCode, reason);
+    }
+
+    private void printMessage(String message) {
+        System.out.println("From " + url + ": " + message);
     }
 
     @Override
     public void onWebSocketConnect(Session sess) {
-        System.out.println("Received connect: " + sess);
+        printMessage("Received connect: " + sess);
         super.onWebSocketConnect(sess);
     }
 
     @Override
     public void onWebSocketError(Throwable cause) {
-        System.out.println("Received error: " + cause);
+        printMessage("Received error: " + cause);
         super.onWebSocketError(cause);
     }
 
     @Override
     public void onWebSocketText(String message) {
-        System.out.println("Received message: " + message);
+        printMessage("Received message: " + message);
         super.onWebSocketText(message);
     }
 }
