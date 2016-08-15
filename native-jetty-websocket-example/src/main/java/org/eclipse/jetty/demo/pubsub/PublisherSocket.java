@@ -16,7 +16,7 @@ public class PublisherSocket extends WebSocketAdapter {
     @Override
     public void onWebSocketConnect(Session sess) {
         System.out.println("Received connect");
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < PublisherServer.getNumberOfRuns(); i++) {
             try {
                 String eventString = "Server health: " + new Random().nextBoolean();
                 System.out.println("Sending event: " + i + ", event string: " + eventString);

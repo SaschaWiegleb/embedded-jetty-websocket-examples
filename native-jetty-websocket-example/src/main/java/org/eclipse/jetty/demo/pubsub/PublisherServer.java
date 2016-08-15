@@ -6,6 +6,8 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 
 public class PublisherServer {
 
+    private static int numberOfRuns = 10;
+
     public static void main(String[] args) throws Exception {
         String host = "localhost";
         int port = 8080;
@@ -16,6 +18,11 @@ public class PublisherServer {
             port = Integer.parseInt(args[0].split(":")[1]);
             System.out.println(String.format("Using host: %s, port: %d", host, port));
         }
+
+        if (args.length >= 2) {
+            numberOfRuns = Integer.parseInt(args[1]);
+        }
+
         Server server = new Server();
         ServerConnector connector = new ServerConnector(server);
         connector.setHost(host);
@@ -29,5 +36,9 @@ public class PublisherServer {
 
         server.start();
         server.join();
+    }
+
+    public static int getNumberOfRuns() {
+        return numberOfRuns;
     }
 }
