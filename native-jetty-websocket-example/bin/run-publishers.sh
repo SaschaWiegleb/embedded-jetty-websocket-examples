@@ -22,5 +22,5 @@ fi
 
 for i in `seq ${START_PORT} ${END_PORT}`
 do
-    java -cp ${LIB_DIR}/native-jetty-websocket-example-1.0-SNAPSHOT-jar-with-dependencies.jar org.eclipse.jetty.demo.pubsub.PublisherServer ${IP_ADDRESS}:${i} ${NUM_RUNS} &> ${LOG_DIR}/${IP_ADDRESS}_${i}.log &
+    java -cp ${LIB_DIR}/native-jetty-websocket-example-1.0-SNAPSHOT-jar-with-dependencies.jar org.eclipse.jetty.demo.pubsub.PublisherServer ${IP_ADDRESS}:${i} ${NUM_RUNS} &> ${LOG_DIR}/publisher_${IP_ADDRESS}_${i}.log &
 done
