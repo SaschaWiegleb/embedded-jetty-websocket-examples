@@ -1,11 +1,15 @@
 package org.eclipse.jetty.demo.pubsub;
 
-import org.eclipse.jetty.websocket.servlet.WebSocketServlet;
-import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
+
+import org.eclipse.jetty.websocket.WebSocket;
+import org.eclipse.jetty.websocket.WebSocketServlet;
+
+import javax.servlet.http.HttpServletRequest;
 
 public class PublisherServlet extends WebSocketServlet {
+
     @Override
-    public void configure(WebSocketServletFactory webSocketServletFactory) {
-        webSocketServletFactory.register(PublisherSocket.class);
+    public WebSocket doWebSocketConnect(HttpServletRequest httpServletRequest, String s) {
+        return new PublisherSocket();
     }
 }

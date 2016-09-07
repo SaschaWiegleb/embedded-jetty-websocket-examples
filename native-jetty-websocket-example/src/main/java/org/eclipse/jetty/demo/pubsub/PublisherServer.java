@@ -1,7 +1,7 @@
 package org.eclipse.jetty.demo.pubsub;
 
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.ServerConnector;
+import org.eclipse.jetty.server.nio.SelectChannelConnector;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 
 public class PublisherServer {
@@ -24,7 +24,7 @@ public class PublisherServer {
         }
 
         Server server = new Server();
-        ServerConnector connector = new ServerConnector(server);
+        SelectChannelConnector connector = new SelectChannelConnector();
         connector.setHost(host);
         connector.setPort(port);
         server.addConnector(connector);

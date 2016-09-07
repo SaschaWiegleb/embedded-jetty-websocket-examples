@@ -1,7 +1,8 @@
 package org.eclipse.jetty.demo.pubsub;
 
-import org.eclipse.jetty.websocket.api.Session;
-import org.eclipse.jetty.websocket.client.WebSocketClient;
+
+import org.eclipse.jetty.websocket.WebSocketClient;
+import org.eclipse.jetty.websocket.WebSocketClientFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,7 +10,6 @@ import java.net.URI;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Future;
 
 public class SubscriberClient {
     public static void main(String[] args) throws Exception {
@@ -24,12 +24,11 @@ public class SubscriberClient {
     }
 
     private static void connectTo(String url) throws Exception {
+        WebSocketClientFactory webSocketClientFactory = new WebSocketClientFactory();
+        webSocketClientFactory.start();
         URI uri = URI.create(url);
-        WebSocketClient webSocketClient = new WebSocketClient();
-        webSocketClient.start();
-        SubscriberSocket subscriberSocket = new SubscriberSocket(url);
-        Future<Session> sessionFuture = webSocketClient.connect(subscriberSocket, uri);
-        Session webSocketSession = sessionFuture.get();
+        WebSocketClient webSocketClient = webSocketClientFactory.newWebSocketClient();
+        webSocketClient.open(uri, new SubscriberSocket(url));
     }
 
     private static String[] getUrlsFromConf(String confFilePath) throws IOException {

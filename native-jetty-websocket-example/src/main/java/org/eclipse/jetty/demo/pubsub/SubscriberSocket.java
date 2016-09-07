@@ -1,9 +1,8 @@
 package org.eclipse.jetty.demo.pubsub;
 
-import org.eclipse.jetty.websocket.api.Session;
-import org.eclipse.jetty.websocket.api.WebSocketAdapter;
+import org.eclipse.jetty.websocket.WebSocket;
 
-public class SubscriberSocket extends WebSocketAdapter {
+public class SubscriberSocket implements WebSocket.OnTextMessage {
     private String url;
 
     public SubscriberSocket(String url) {
@@ -11,30 +10,21 @@ public class SubscriberSocket extends WebSocketAdapter {
     }
 
     @Override
-    public void onWebSocketClose(int statusCode, String reason) {
+    public void onMessage(String message) {
+        printMessage("Received message: " + message);
+    }
+
+    @Override
+    public void onOpen(Connection connection) {
+        printMessage("Received connect: " + connection);
+    }
+
+    @Override
+    public void onClose(int statusCode, String reason) {
         printMessage("Received close: status: " + statusCode + ", reason: " + reason);
-        super.onWebSocketClose(statusCode, reason);
     }
 
     private void printMessage(String message) {
         System.out.println("From " + url + ": " + message);
-    }
-
-    @Override
-    public void onWebSocketConnect(Session sess) {
-        printMessage("Received connect: " + sess);
-        super.onWebSocketConnect(sess);
-    }
-
-    @Override
-    public void onWebSocketError(Throwable cause) {
-        printMessage("Received error: " + cause);
-        super.onWebSocketError(cause);
-    }
-
-    @Override
-    public void onWebSocketText(String message) {
-        printMessage("Received message: " + message);
-        super.onWebSocketText(message);
     }
 }

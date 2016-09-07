@@ -1,26 +1,25 @@
 package org.eclipse.jetty.demo.pubsub;
 
-import org.eclipse.jetty.websocket.api.Session;
-import org.eclipse.jetty.websocket.api.WebSocketAdapter;
+import org.eclipse.jetty.websocket.WebSocket;
 
 import java.io.IOException;
 import java.util.Random;
 
-public class PublisherSocket extends WebSocketAdapter {
+public class PublisherSocket implements WebSocket.OnTextMessage {
+
     @Override
-    public void onWebSocketClose(int statusCode, String reason) {
-        System.out.println("Received close: status: " + statusCode + ", reason: " + reason);
-        super.onWebSocketClose(statusCode, reason);
+    public void onMessage(String s) {
+        System.out.println("Received message on server: " + s);
     }
 
     @Override
-    public void onWebSocketConnect(Session sess) {
+    public void onOpen(Connection connection) {
         System.out.println("Received connect");
         for (int i = 0; i < PublisherServer.getNumberOfRuns(); i++) {
             try {
                 String eventString = "Server health: " + new Random().nextBoolean();
                 System.out.println("Sending event: " + i + ", event string: " + eventString);
-                sess.getRemote().sendString(eventString);
+                connection.sendMessage(eventString);
                 Thread.sleep(10000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -31,8 +30,7 @@ public class PublisherSocket extends WebSocketAdapter {
     }
 
     @Override
-    public void onWebSocketError(Throwable cause) {
-        System.out.println("Received error: " + cause);
-        super.onWebSocketError(cause);
+    public void onClose(int statusCode, String reason) {
+        System.out.println("Received close: status: " + statusCode + ", reason: " + reason);
     }
 }
