@@ -7,11 +7,16 @@ import java.net.URI;
 
 public class AmbariSubscriberClient {
     public static void main(String[] args) throws Exception {
-        String defaultPublisher = "c6401.ambari.apache.org:8080";
-        if (args.length >= 1) {
-            defaultPublisher = args[0];
+        String serverAndPort = null;
+        boolean isPlain = false;
+        if (args.length != 2) {
+            System.out.println("Usage: AmbariSubscriberClient <ip:port> <plain|secure>");
+            System.exit(-1);
+        } else {
+            serverAndPort = args[0];
+            isPlain = "plain".equals(args[1]);
         }
-        connectTo(getUrl(defaultPublisher));
+        connectTo(getUrl(serverAndPort, isPlain));
     }
 
     private static void connectTo(String url) throws Exception {
@@ -22,8 +27,9 @@ public class AmbariSubscriberClient {
         webSocketClient.open(uri, new SubscriberSocket(url));
     }
 
-    private static String getUrl(String address) {
-        return "ws://" + address + "/alerts";
+    private static String getUrl(String address, boolean isPlain) {
+        String scheme = isPlain ? "ws" : "wss";
+        return scheme + "://" + address + "/alerts";
     }
 
 }
