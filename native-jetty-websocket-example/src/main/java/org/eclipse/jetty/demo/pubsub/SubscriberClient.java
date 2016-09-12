@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SubscriberClient {
+    private static WebSocketClientFactory webSocketClientFactory;
+
     public static void main(String[] args) throws Exception {
         String defaultPublisher = "localhost:8080";
         String[] urlsToConnect = new String[] {getUrl(defaultPublisher)};
@@ -24,8 +26,10 @@ public class SubscriberClient {
     }
 
     private static void connectTo(String url) throws Exception {
-        WebSocketClientFactory webSocketClientFactory = new WebSocketClientFactory();
-        webSocketClientFactory.start();
+        if (webSocketClientFactory == null) {
+            webSocketClientFactory = new WebSocketClientFactory();
+            webSocketClientFactory.start();
+        }
         URI uri = URI.create(url);
         WebSocketClient webSocketClient = webSocketClientFactory.newWebSocketClient();
         webSocketClient.open(uri, new SubscriberSocket(url));
