@@ -15,11 +15,13 @@ public class SubscriberClient {
     private static WebSocketClientFactory webSocketClientFactory;
 
     public static void main(String[] args) throws Exception {
-        String defaultPublisher = "localhost:8080";
-        String[] urlsToConnect = new String[] {getUrl(defaultPublisher)};
-        if (args.length >= 1) {
-            urlsToConnect = getUrlsFromConf(args[0]);
+        if (args.length != 2) {
+            System.out.println("Usage: SubscriberClient <server_ips_file> <plain|secure>");
+            System.exit(-1);
         }
+        boolean isPlain = "plain".equals(args[1]);
+        String[] urlsToConnect = getUrlsFromConf(args[0], isPlain);
+
         for (String url : urlsToConnect) {
             connectTo(url);
         }
@@ -35,18 +37,19 @@ public class SubscriberClient {
         webSocketClient.open(uri, new SubscriberSocket(url));
     }
 
-    private static String[] getUrlsFromConf(String confFilePath) throws IOException {
+    private static String[] getUrlsFromConf(String confFilePath, boolean isPlain) throws IOException {
         List<String> addresses = Files.readAllLines(new File(confFilePath).toPath());
         List<String> urls = new ArrayList<>();
         for (String address : addresses) {
             if (!address.trim().isEmpty()) {
-                urls.add(getUrl(address));
+                urls.add(getUrl(address, isPlain));
             }
         }
         return urls.toArray(new String[]{});
     }
 
-    private static String getUrl(String address) {
-        return "ws://" + address + "/pubsub";
+    private static String getUrl(String address, boolean isPlain) {
+        String scheme = isPlain ? "ws" : "wss";
+        return scheme + "://" + address + "/pubsub";
     }
 }
