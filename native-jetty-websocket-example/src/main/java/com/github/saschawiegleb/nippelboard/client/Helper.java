@@ -9,8 +9,6 @@ import org.eclipse.jetty.websocket.client.WebSocketClient;
 
 import com.github.saschawiegleb.nippelboard.Conf;
 
-import javaslang.control.Try;
-
 public class Helper {
 
 	static URI uri = URI.create(Conf.SERVER_ADRESS);
@@ -29,20 +27,12 @@ public class Helper {
 				Session session = fut.get();
 				// Send a message
 				session.getRemote().sendString(message);
+				System.out.println("send message: " + message);
 
-				new ParallelTasks<Void>() {
-					@Override
-					public Try<Void> runTask() {
-						// wait for response
-						try {
-							mySocket.awaitClose(5, TimeUnit.SECONDS);
-						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-						return null;
-					}
-				}.start();
+				if (message.equals("all"))
+					mySocket.awaitClose(5, TimeUnit.MILLISECONDS);
+				if (message.startsWith("http"))
+					mySocket.awaitClose(5, TimeUnit.SECONDS);
 
 				// Close session
 				session.close();
@@ -53,5 +43,4 @@ public class Helper {
 			t.printStackTrace(System.err);
 		}
 	}
-
 }

@@ -20,7 +20,7 @@ public class Ui extends Application {
 	}
 
 	@Override
-	public void start(Stage stage) {
+	public void start(final Stage stage) {
 		instance = this;
 		stage.setTitle("Nippelboard!");
 		Helper.send("all");
@@ -33,10 +33,15 @@ public class Ui extends Application {
 		primaryStage = stage;
 	}
 
+	static void clear() {
+		instance.box.getChildren().clear();
+	}
+
 	static double getWidth() {
 		if (instance.primaryStage == null || instance.primaryStage.getWidth() == Double.NaN) {
 			return globalWidth;
 		}
 		return instance.primaryStage.getWidth();
 	}
+
 }

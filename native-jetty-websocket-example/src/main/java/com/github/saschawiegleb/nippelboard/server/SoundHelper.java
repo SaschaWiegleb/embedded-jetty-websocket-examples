@@ -5,6 +5,11 @@ import static javax.sound.sampled.AudioSystem.getAudioInputStream;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -34,6 +39,25 @@ public class SoundHelper {
 		return builder.delete(builder.length() - 1, builder.length()).toString();
 	}
 
+	public static void downloadSound(String urlString) {
+		InputStream in = null;
+		try {
+			URL url = new URL(urlString);
+			String fileName = urlString.substring(urlString.lastIndexOf('/') + 1, urlString.length());
+
+			in = url.openStream();
+			Files.copy(in, Paths.get(Conf.soundFolder + fileName), StandardCopyOption.REPLACE_EXISTING);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				in.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
 	public static File getSpecificSoundfile(String name) {
 		name = name.toLowerCase();
 		List<File> allSounds = getAllSounds();
@@ -46,6 +70,9 @@ public class SoundHelper {
 	}
 
 	public static synchronized void playSound(final File file) {
+		if (file == null)
+			return;
+
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
