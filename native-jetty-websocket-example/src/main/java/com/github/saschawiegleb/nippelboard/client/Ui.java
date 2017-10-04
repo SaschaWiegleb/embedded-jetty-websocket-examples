@@ -2,6 +2,8 @@ package com.github.saschawiegleb.nippelboard.client;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -25,11 +27,16 @@ public class Ui extends Application {
 		stage.setTitle("Nippelboard!");
 		Helper.send("all");
 
+		ScrollPane sp = new ScrollPane();
+		sp.setVbarPolicy(ScrollBarPolicy.AS_NEEDED);
+
 		StackPane root = new StackPane();
-		root.getChildren().add(box);
+		sp.setContent(box);
+		root.getChildren().add(sp);
 
 		stage.setScene(new Scene(root, globalWidth, globalWidth / 16.0 * 9.0));
 		stage.show();
+
 		primaryStage = stage;
 	}
 
