@@ -11,5 +11,7 @@ public class Conf {
 
 	public static String SERVER_IP = "localhost";
 
-	public static String SERVER_ADRESS = "ws://" + SERVER_IP + ":" + SERVER_PORT + SERVER_PATH;
+	public static String getServerAdress() {
+		return "ws://" + SERVER_IP + ":" + SERVER_PORT + SERVER_PATH;
+	}
 }

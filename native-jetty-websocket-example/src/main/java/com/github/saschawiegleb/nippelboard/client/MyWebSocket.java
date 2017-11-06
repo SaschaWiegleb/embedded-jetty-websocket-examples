@@ -29,46 +29,51 @@ public class MyWebSocket {
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
-				Ui.instance.box.getChildren().clear();
-				List<String> asList = Arrays.asList(message.split(","));
-				int sum = 0;
-				HBox hbox = null;
-				for (String item : asList) {
-					if (sum == 0) {
-						hbox = new HBox();
-						Ui.instance.box.getChildren().add(hbox);
-					}
+				Nippelboard.instance.box.getChildren().clear();
+				HBox hbox = new HBox();
+				Nippelboard.instance.box.getChildren().add(hbox);
 
-					hbox.getChildren().add(ImageButton.provideButton(item.split("\\.")[0], Conf.WIDTH));
-					sum += Conf.WIDTH;
-					if (sum >= Ui.getWidth() - Conf.WIDTH) {
-						sum = 0;
+				if (!message.isEmpty()) {
+					List<String> asList = Arrays.asList(message.split(","));
+					int sum = 0;
+					for (String item : asList) {
+						hbox.getChildren().add(ImageButton.provideButton(item.split("\\.")[0], Conf.WIDTH));
+						sum += Conf.WIDTH;
+						if (sum >= Nippelboard.getWidth() - Conf.WIDTH) {
+							sum = 0;
+							hbox = new HBox();
+							Nippelboard.instance.box.getChildren().add(hbox);
+						}
 					}
 				}
 
-				Button upload = new Button("Upload File");
-				upload.setOnAction(new EventHandler<ActionEvent>() {
-					@Override
-					public void handle(ActionEvent e) {
-						TextInputDialog dialog = new TextInputDialog();
-						// dialog.setTitle("Text Input Dialog");
-						// dialog.setHeaderText("Look, a Text Input Dialog");
-						dialog.setContentText("Please enter url:");
-
-						// Traditional way to get the response value.
-						Optional<String> result = dialog.showAndWait();
-						if (result.isPresent() && result.get().startsWith("http")) {
-							Helper.send(result.get());
-						} else {
-							System.err.println("Fehler bei der URL");
-						}
-						Helper.send("all");
-					}
-				});
-				hbox.getChildren().add(upload);
+				hbox.getChildren().add(provideUploadButton());
 			}
 		});
 		this.closeLatch = new CountDownLatch(1);
+	}
+
+	public Button provideUploadButton() {
+		Button upload = new Button("Upload File");
+		upload.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent e) {
+				TextInputDialog dialog = new TextInputDialog();
+				// dialog.setTitle("Text Input Dialog");
+				// dialog.setHeaderText("Look, a Text Input Dialog");
+				dialog.setContentText("Please enter url:");
+
+				// Traditional way to get the response value.
+				Optional<String> result = dialog.showAndWait();
+				if (result.isPresent() && result.get().startsWith("http")) {
+					Helper.send(result.get());
+				} else {
+					System.err.println("Fehler bei der URL");
+				}
+				Helper.send("all");
+			}
+		});
+		return upload;
 	}
 
 	public boolean awaitClose(int duration, TimeUnit unit) throws InterruptedException {

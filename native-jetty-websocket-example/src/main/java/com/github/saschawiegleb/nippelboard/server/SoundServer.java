@@ -6,8 +6,22 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 
 import com.github.saschawiegleb.nippelboard.Conf;
 
-public class EventServer {
+/**
+ * java -jar server.jar 8888 sound
+ * 
+ * @author swiegleb
+ *
+ */
+public class SoundServer {
 	public static void main(String[] args) {
+		System.out.println("Use: java -jar soundServer.jar serverPort soundFolder");
+		if (args.length > 0) {
+			Conf.SERVER_PORT = Integer.parseInt(args[0]);
+		}
+		if (args.length > 1) {
+			Conf.soundFolder = args[1];
+		}
+
 		Server server = new Server();
 		ServerConnector connector = new ServerConnector(server);
 		connector.setPort(Conf.SERVER_PORT);

@@ -28,6 +28,10 @@ public class SoundHelper {
 
 	static List<File> getAllSounds() {
 		File folder = new File(Conf.soundFolder);
+		if (!folder.exists()) {
+			folder.mkdir();
+			return Arrays.asList();
+		}
 		return new ArrayList<>(Arrays.asList(folder.listFiles()));
 	}
 
@@ -35,6 +39,9 @@ public class SoundHelper {
 		StringBuilder builder = new StringBuilder();
 		for (File sound : getAllSounds()) {
 			builder.append(sound.getName()).append(",");
+		}
+		if (builder.length() == 0) {
+			return "";
 		}
 		return builder.delete(builder.length() - 1, builder.length()).toString();
 	}

@@ -11,7 +11,7 @@ import com.github.saschawiegleb.nippelboard.Conf;
 
 public class Helper {
 
-	static URI uri = URI.create(Conf.SERVER_ADRESS);
+	static URI uri = URI.create(Conf.getServerAdress());
 
 	static void send(String message) {
 		WebSocketClient client = new WebSocketClient();
